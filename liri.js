@@ -118,7 +118,7 @@ fs.readFile("random.txt", "utf8", function (error, data) {
   if (dataArr[0] === "movie-this" && process.argv[2] === "random") {
     var request = require("request");
     var movieName = dataArr[1];
-  
+
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
     console.log(queryUrl);
 
@@ -147,20 +147,23 @@ if (process.argv[2] === "my-tweets") {
 };
 
 function myTweets() {
-var Twitter = require('twitter');
- 
-var client = new Twitter({
-  consumer_key: '',
-  consumer_secret: '',
-  access_token_key: '',
-  access_token_secret: ''
-});
- 
-var params = {jmgerow: 'nodejs'};
-client.get('statuses/user_timeline', params, function(error, tweets, response) { 
-  if (!error) {
-    console.log('tweets', tweets);
-    console.log('response', response)
-  }
-});
+  var Twitter = require('twitter');
+
+  var client = new Twitter({
+    consumer_key: '',
+    consumer_secret: '',
+    access_token_key: '',
+    access_token_secret: ''
+  });
+
+  var params = { screen_name: 'nodejs' };
+  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+    console.log('error', error)
+    if (!error) {
+      console.log('tweets', tweets);
+      console.log('response', response)
+    } else {
+      console.log('error', error)
+    }
+  });
 };
