@@ -1,7 +1,12 @@
 require("dotenv").config();
+
 //TODO: need to fix "keys" showing as undefined
+// require("./keys.js");
 // var spotify = new Spotify(keys.spotify);
+
 // var client = new Twitter(keys.twitter);
+
+// var Twitter = require('twitter');
 
 //TODO: need song search and movie search to read default values if field is blank
 
@@ -13,27 +18,20 @@ if (process.argv[2] === "spotify-this-song") {
 function spotify() {
   var Spotify = require('node-spotify-api');
   var songName = "";
-  console.log('songName', songName)
   var nodeArgs = process.argv;
   for (var i = 3; i < nodeArgs.length; i++) {
 
     songName = songName + " " + nodeArgs[i];
-    console.log('songName', songName)
   }
   // var spotify = new Spotify(keys.spotify);
   var spotify = new Spotify({
     id: (process.env.SPOTIFY_ID),
     secret: (process.env.SPOTIFY_SECRET)
   });
-  console.log('songName', songName)
   spotify.search({ type: 'track', query: songName, limit: 1 }, function (err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
-
-
-    // console.log(data);   
-    // console.log(JSON.stringify(data, null, 2));
     console.log("Arist: " + (JSON.stringify((data.tracks.items[0].album.artists[0].name), null, 2)));
     console.log("Song Title: " + (JSON.stringify((data.tracks.items[0].name), null, 2)));
     console.log("Preview Link: " + (JSON.stringify((data.tracks.items[0].album.artists[0].external_urls.spotify), null, 2)));
@@ -57,7 +55,7 @@ function movie() {
   }
 
   var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-  console.log(queryUrl);
+  // console.log(queryUrl);
 
   request(queryUrl, function (error, response, body) {
 
@@ -150,20 +148,26 @@ function myTweets() {
   var Twitter = require('twitter');
 
   var client = new Twitter({
-    consumer_key: '',
-    consumer_secret: '',
-    access_token_key: '',
-    access_token_secret: ''
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   });
 
-  var params = { screen_name: 'nodejs' };
+  var params = { screen_name: 'jmgerow' };
   client.get('statuses/user_timeline', params, function (error, tweets, response) {
-    console.log('error', error)
+
     if (!error) {
-      console.log('tweets', tweets);
-      console.log('response', response)
+
+      for (var i = 0; i < tweets.length; i++) {
+        if (i === 21) {
+          break;
+        }
+        console.log(tweets[i].created_at + ": " + tweets[i].text);
+      };
+
     } else {
-      console.log('error', error)
+      console.log('error', error);
     }
   });
 };
